@@ -65,9 +65,10 @@ trips %>%
             trip_count = n()
           ) %>%
   group_by(start_station_name) %>%
-    slice_max(trip_count,n = 3)
+    slice_max(trip_count,n = 3) 
 
 # find the top 3 most common station-to-station trips by gender
+
 
 # find the day with the most trips
 # tip: first add a column for year/month/day without time of day (use as.Date or floor_date from the lubridate package)
