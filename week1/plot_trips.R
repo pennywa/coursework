@@ -105,17 +105,48 @@ ggplot(aes(x = tmin, y = num_trips, color = num_trips)) +
 # repeat this, splitting results by whether there was substantial precipitation or not
 # you'll need to decide what constitutes "substantial precipitation" and create a new T/F column to indicate this
 trips_with_weather %>%
-mutate(substantial_prcp = prcp >= 1.0) %>%
-group_by(ymd, tmin, num_trips, substantial_prcp) %>%
-    summarize(num_trips = n()) %>%
+summarize(avg_prcp = mean(prcp)) %>%
+select(avg_prcp)
 
+trips_with_weather %>%
+mutate(substantial_prcp = prcp > 0.0936) %>%
+group_by(ymd, tmin, substantial_prcp) %>%
+    summarize(num_trips = n()) %>%
+ggplot(aes(x = tmin, y = num_trips, color = substantial_prcp)) +
+    geom_point()
 
 # add a smoothed fit on top of the previous plot, using geom_smooth
+trips_with_weather %>%
+mutate(substantial_prcp = prcp > 0.0936) %>%
+group_by(ymd, tmin, substantial_prcp) %>%
+    summarize(num_trips = n()) %>%
+ggplot(aes(x = tmin, y = num_trips, color = substantial_prcp)) +
+    geom_point() + 
+    facet_wrap(~substantial_prcp)
+    geom_smooth(model="lm")
 
 # compute the average number of trips and standard deviation in number of trips by hour of the day
 # hint: use the hour() function from the lubridate package
+trips_with_weather %>%
+    mutate(num_trips_by_hr = lubridate::hour(starttime)) %>%
+    group_by(ymd, num_trips_by_hr) %>%
+    summarize(num_trips = n()) %>%
+    group_by(num_trips_by_hr) %>%
+    summarize(avg_num_trips = mean(num_trips), sd_num_trips_by_hr = sd(num_trips)) %>%
 
 # plot the above
+ggplot(aes(x = num_trips_by_hr, y = avg_num_trips)) +
+    geom_line() +
+    geom_ribbon(aes(ymin = avg_num_trips - sd_num_trips_by_hr, ymax = avg_num_trips + sd_num_trips_by_hr), fill = "steelblue")
 
 # repeat this, but now split the results by day of the week (Monday, Tuesday, ...) or weekday vs. weekend days
 # hint: use the wday() function from the lubridate package
+trips_with_weather %>%
+    mutate(wday = lubridate::wday(starttime)) %>%
+    group_by(ymd, wday) %>%
+    summarize(num_trips = n()) %>%
+    group_by(wday) %>%
+    summarize(avg_num_trips = mean(num_trips), sd_num_trips_by_hr = sd(num_trips)) %>%
+ggplot(aes(x = wday, y = avg_num_trips)) +
+    geom_line() +
+    geom_ribbon(aes(ymin = avg_num_trips - sd_num_trips_by_hr, ymax = avg_num_trips + sd_num_trips_by_hr), fill = "steelblue")
