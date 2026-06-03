@@ -22,7 +22,7 @@ library(tidyverse)
 # 3. P(Y = odd) = 12/21
 # 4. P(1 <= Y < 4) = 9/21
 # 5. P(|Y - 3| < 1.5) = 12/21
-# 6. E(Y) = 10/3 or 3.333333
+# 6. E(Y) = 3.333333
 values <- c(0,1,2,3,4,5)
 probability <- c(1,2,3,4,5,6) / 21
 
@@ -30,9 +30,12 @@ v <- values * probability
 total <- sum(v)
 print(total) 
 
-# 7. Var(Y) = ?
-# 8. What is the standard deviation of Y?
+# 7. Var(Y) =  2.222222
+var <- sum((values-total)^2*probability)
+print(var)
 
+# 8. What is the standard deviation of Y? 1.490712
+print(sqrt(var))
 
 ####################################################################################
 # IST Chapter 4, Exercise 4.2
@@ -41,12 +44,15 @@ print(total)
 # is tossed three times. If all tosses end up "Head" then the player wins
 # $10. Otherwise, the player loses the investment.
 #
-# 1. What is the probability of winning the game?
-# 2. What is the probability of losing the game?
-# 3. What is the expected gain for the player that plays this game?
+# 1. What is the probability of winning the game? 1/8
+
+# 2. What is the probability of losing the game? 7/8
+
+# 3. What is the expected gain for the player that plays this game? 
 #    (Notice that the expectation can obtain a negative value.)
-
-
+# If you win you gain $8, if you lose you lose -$2
+#8 * 1/8 + (-2) * 7/8
+#ANS: -3/4
 
 ####################################################################################
 # IST Chapter 6, Exercise 6.1
