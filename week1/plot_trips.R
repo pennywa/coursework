@@ -137,7 +137,7 @@ trips_with_weather %>%
 # plot the above
 ggplot(aes(x = num_trips_by_hr, y = avg_num_trips)) +
     geom_line() +
-    geom_ribbon(aes(ymin = avg_num_trips - sd_num_trips_by_hr, ymax = avg_num_trips + sd_num_trips_by_hr), fill = "steelblue")
+    geom_ribbon(aes(ymin = avg_num_trips - sd_num_trips_by_hr, ymax = avg_num_trips + sd_num_trips_by_hr, alpha = 0.5), fill = "steelblue")
 
 # repeat this, but now split the results by day of the week (Monday, Tuesday, ...) or weekday vs. weekend days
 # hint: use the wday() function from the lubridate package
@@ -149,4 +149,4 @@ trips_with_weather %>%
     summarize(avg_num_trips = mean(num_trips), sd_num_trips_by_hr = sd(num_trips)) %>%
 ggplot(aes(x = wday, y = avg_num_trips)) +
     geom_line() +
-    geom_ribbon(aes(ymin = avg_num_trips - sd_num_trips_by_hr, ymax = avg_num_trips + sd_num_trips_by_hr), fill = "steelblue")
+    geom_ribbon(aes(ymin = avg_num_trips - sd_num_trips_by_hr, ymax = avg_num_trips + sd_num_trips_by_hr, alpha = 0.5), fill = "steelblue")
