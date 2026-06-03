@@ -69,15 +69,32 @@ print(sqrt(var))
 # Normal distribution with a mean of 630kg and a standard deviation of 61kg.
 #
 # 1. What is the probability that the total weight of 8 people exceeds 650kg?
+1 - pnorm(650,560,57)  
+# 0.05717406
+
 # 2. What is the probability that the total weight of 9 people exceeds 650kg?
+1 - pnorm(650,630,61) 
+#  0.3715054
+
 # 3. What is the central region that contains 80% of distribution of the
 #    total weight of 8 people?
+ qnorm(0.1,560,57)
+# 486.9516
+
+ qnorm(0.9,560,57)
+# 633.0484
+
 # 4. What is the central region that contains 80% of distribution of the
 #    total weight of 9 people?
+qnorm(0.1,630,61)
+# 551.8254
+
+qnorm(0.9,630,61)
+# 708.1746
 
 # Hint: use pnorm() and qnorm().
 
-
+# those are the intervals; like the lower and upper bounds contianing 80% of the distribution
 
 ####################################################################################
 # IST Chapter 7, Exercise 7.1
