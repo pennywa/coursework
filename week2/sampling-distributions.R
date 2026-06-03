@@ -109,16 +109,42 @@ qnorm(0.9,630,61)
 # of the variable "bmi". We assume a sample of size n = 150.
 #
 # 1. Compute the population average of the variable "bmi".
+pop2 <- read_csv("http://pluto.huji.ac.il/~msby/StatThink/Datasets/pop2.csv")
+mean(pop2$bmi)
+# 24.98446
+
 # 2. Compute the population standard deviation of the variable "bmi".
+sd(pop2$bmi)
+# 4.188511
+
 # 3. Compute the expectation of the sampling distribution for the sample
 #    average of the variable.
+ x.avgs <- rep(0,10^4)
+  for(i in 1:10^4)
+{
+x.group <- sample(pop2$bmi,150)
+x.avgs[i] <- mean(x.group)
+}
+mean(x.avgs)
+# 24.98105
+# basically it's 25. values are slightly different when i run it multiple times
+
 # 4. Compute the standard deviation of the sampling distribution for the
 #    sample average of the variable.
+sd(x.avgs)
+#  0.3425947
+
 # 5. Identify, using simulations, the central region that contains 80% of
 #    the sampling distribution of the sample average.
+
+quantile(x.avgs,c(0.1,0.9))
+# 24.54421 25.41879 
+
 # 6. Identify, using the Central Limit Theorem, an approximation of the
 #    central region that contains 80% of the sampling distribution of the
 #    sample average.
+qnorm(c(0.1,0.9),mean(x.avgs),sd(x.avgs))
+#  24.54661 25.41283
 
 pop2 <- read_csv("http://pluto.huji.ac.il/~msby/StatThink/Datasets/pop2.csv")
 
