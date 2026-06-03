@@ -26,13 +26,86 @@ smaller %>%
 ---
 27.3.1 Exercise 3
 ---
+title: "Penny Wang"
+output: html_document
 ---
-TODO
----
+## Education
+* **2027**(Expected): B.S. in Computer Science (Mathematics minor) CUNY Queens College
+
+## Experience
+* **2026**: Microsoft Research Data Science Summer School (DS3) 
+* **2026**: Breakthrough Tech AI/ML Fellow Cornell Tech 
 
 ---
+Footnote, ^[I am a footnote.]. 
+Footnote meaning according to the dictionary, ^[“A note of reference, explanation, or comment usually placed below the text on a printed page.” - Merriam Webster ]
+
+> I am a block quote. 
+>”Block quotation is a method of formatting to highlight sections of directly quoted text in your writing.” - University of Illinois Springfield
+
+---
+
 27.4.7 Exercise 1
 ---
+title: "Diamond Sizes Analysis" 
+output: html_document 
 ---
-TODO
+```{r setup-global}
+library(ggplot2)
+library(dplyr)
+library(scales) 
+
+knitr::opts_chunk$set(
+  echo = FALSE
+)
+
+smaller <- diamonds %>% filter(carat <= 2.5) 
+
+total_diamonds <- nrow(diamonds) 
+larger_diamonds <- total_diamonds - nrow(smaller) 
+percent_larger <- (larger_diamonds / total_diamonds) * 100 
+
+top_20_diamonds <- diamonds %>%
+  arrange(desc(carat)) %>%
+  slice(1:20) %>%
+  select(carat, cut, color, clarity, depth, table, price)
+  ```
+
+```{r smaller_plot}
+smaller %>% 
+  ggplot(aes(x = carat)) + 
+  geom_histogram(binwidth = 0.01, fill = "steelblue", color = "white")
+```
+
+```{r top_20_diamonds_table}
+knitr::kable(
+  top_20_diamonds, 
+  caption = "Top 20 Largest Diamonds by Carat Weight and Quality Metrics",
+  col.names = c("Carat Weight", "Cut Quality", "Color Grade", "Clarity Rating", "Depth %", "Table %", "Price ($)")
+)
+```
+
+```{r chunk_a, cache = TRUE} 
+# Base Case
+a_time <- lubridate::now()
+print(paste("Chunk A executed at:", a_time))
+```
+
+```{r chunk_b, cache = TRUE, dependson = "chunk_a"} 
+# Needs Parent A
+b_time <- lubridate::now()
+print(paste("Chunk B executed at:", b_time))
+```
+
+```{r chunk_c, cache = TRUE, dependson = "chunk_a"} 
+# Needs Parent A
+c_time <- lubridate::now()
+print(paste("Chunk C executed at:", c_time))
+```
+
+```{r chunk_d, cache = TRUE, dependson = c("chunk_b", "chunk_c")} 
+# Needs Both Parents B and C
+d_time <- lubridate::now()
+print(paste("Chunk D executed at:", d_time))
+```
 ---
