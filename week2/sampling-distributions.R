@@ -17,15 +17,21 @@ library(tidyverse)
 # These probabilities are a function of the number p, the probability of
 # the value "0". Answer the following questions:
 #
-# 1. What is the value of p?
-# 2. P(Y < 3) = ?
-# 3. P(Y = odd) = ?
-# 4. P(1 <= Y < 4) = ?
-# 5. P(|Y - 3| < 1.5) = ?
-# 6. E(Y) = ?
+# 1. What is the value of p? 1/21
+# 2. P(Y < 3) = 6/21
+# 3. P(Y = odd) = 12/21
+# 4. P(1 <= Y < 4) = 9/21
+# 5. P(|Y - 3| < 1.5) = 12/21
+# 6. E(Y) = 10/3 or 3.333333
+values <- c(0,1,2,3,4,5)
+probability <- c(1,2,3,4,5,6) / 21
+
+v <- values * probability
+total <- sum(v)
+print(total) 
+
 # 7. Var(Y) = ?
 # 8. What is the standard deviation of Y?
-
 
 
 ####################################################################################
