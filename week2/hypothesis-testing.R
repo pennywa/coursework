@@ -53,11 +53,74 @@ boxplot(magnets$change[30:50])
 #    of size n = 100 from the Normal(3, 2) distribution. Compute the expectation
 #    and the variance of the sample average and of the sample median. Which of
 #    the two estimators has a smaller mean square error?
-#
+n <- 100
+num_sim <- 10000
+
+true_mean_norm <- 3
+sd_norm <- sqrt(2)
+
+avgs_norm <- replicate(num_sim, mean(rnorm(n, mean = true_mean_norm, sd = sd_norm)))
+meds_norm  <- replicate(num_sim, median(rnorm(n, mean = true_mean_norm, sd = sd_norm)))
+
+exp_avg_norm <- mean(avgs_norm)
+exp_med_norm <- mean(meds_norm)
+exp_avg_norm
+#  2.999346
+exp_med_norm
+# 3.000689
+
+var_avg_norm <- var(avgs_norm)
+var_med_norm <- var(meds_norm)
+var_avg_norm
+# 0.01984406
+var_med_norm
+# 0.0306657
+
+mse_avg_norm <- mean((avgs_norm - true_mean_norm)^2)
+mse_med_norm <- mean((meds_norm - true_mean_norm)^2)
+mse_avg_norm
+# 0.0198425
+mse_med_norm
+# 0.03066311
+
+#mse_avg_norm has smaller MSE
+
 # 2. Simulate the sampling distribution of average and the median of a sample
 #    of size n = 100 from the Uniform(0.5, 5.5) distribution. Compute the
 #    expectation and the variance of the sample average and of the sample
 #    median. Which of the two estimators has a smaller mean square error?
+n <- 100
+num_sim <- 10000
+
+true_mean_unif <- 3.0
+low_unif <- 0.5
+high_unif <- 5.5
+
+avgs_unif <- replicate(num_sim, mean(runif(n, min = low_unif, max = high_unif)))
+meds_unif <- replicate(num_sim, median(runif(n, min = low_unif, max = high_unif)))
+
+exp_avg_unif <- mean(avgs_unif)
+exp_med_unif <- mean(meds_unif)
+exp_avg_unif
+# 3.000515
+exp_med_unif
+# 3.003739
+
+var_avg_unif <- var(avgs_unif)
+var_med_unif <- var(meds_unif)
+var_avg_unif
+# 0.0204646
+var_med_unif
+# 0.06153803
+
+mse_avg_unif <- mean((avgs_unif - true_mean_unif)^2)
+mse_med_unif <- mean((meds_unif - true_mean_unif)^2)
+mse_avg_unif
+# 0.02046282
+mse_med_unif
+# 0.06154585
+
+#mse_avg_unif has smaller MSE
 
 ####################################################################################
 # IST Chapter 10, Exercise 10.2
