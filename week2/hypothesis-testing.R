@@ -212,27 +212,43 @@ var_diff
 #
 # (a) What proportion of patients in the treatment group and what proportion
 #     of patients in the control group died?
+control_died_prop <- 30/34
+control_died_prop
+# 0.8823529
+treat_died_prop <- 45/69
+treat_died_prop
+# 0.6521739
+
 # (b) One approach for investigating whether or not the treatment is effective
 #     is to use a randomization technique.
 #     i. What are the claims being tested? Use the same null and alternative
 #          hypothesis notation used in the section.
+
+# Null Hypothesis: p_treat - p_control = 0 
+# No difference meaning the treatment has no effect
+
+# Alternative Hypothesis: p_treat - p_control < 0 
+# If treatment works, expect fewer deaths so difference would be less than zero
+
 #     ii. The paragraph below describes the set up for such approach, if we were
 #     to do it without using statistical software. Fill in the blanks with a
 #     number or phrase, whichever is appropriate. 
-#          We write alive on _______ cards representing patients who were
-#          alive at the end of the study, and dead on ______ cards representing
+#          We write alive on "28" cards representing patients who were
+#          alive at the end of the study, and dead on "75" cards representing
 #          patients who were not. Then, we shuffle these cards and split them
-#          into two groups: one group of size _______ representing treatment, and
-#          another group of size _________ representing control. We calculate the
+#          into two groups: one group of size "69" representing treatment, and
+#          another group of size "34" representing control. We calculate the
 #          difference between the proportion of dead cards in the treatment and
 #          control groups (treatment - control) and record this value. We repeat
-#          this many times to build a distribution centered at ________. Lastly, we
+#          this many times to build a distribution centered at "0." Lastly, we
 #          calculate the fraction of simulations where the simulated differences
-#          in proportions are _________. If this fraction is low, we conclude that it is
+#          in proportions are "less than or equal to observed difference". If this fraction is low, we conclude that it is
 #          unlikely to have observed such an outcome by chance and that the null
 #          hypothesis should be rejected in favor of the alternative.
+
 #     iii. What do the simulation results suggest about the effectiveness of
 #          the transplant program? (See textbook for figure.)
+# The treatment is effective.
 
 ####################################################################################
 # ISRS Exercise 2.6 
