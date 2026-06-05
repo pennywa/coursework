@@ -283,10 +283,44 @@ treat_died_prop
 # histogram shows the distribution of the simulated differences.
 #
 # (a) What are the hypotheses?
+# Null Hypothesis: p_treat - p_control = 0 
+# No difference 
+
+# Alternative Hypothesis: p_treat - p_control > 0 
+# Treatment group yawns more because we're saying yawning is contagious
+
 # (b) Calculate the observed difference between the yawning rates under the
 #     two scenarios.
+control_yawn_prop <- 10/34
+control_yawn_prop
+# 0.2941176
+treat_yawn_prop <- 4/16
+treat_yawn_prop
+# 0.25
+
+# observed difference (p_treatment - p_control)
+# think of this as absolute value
+# -0.0441176
+
+# we dont know if its significant or not
+# hypothesis test if that difference means something
+# reject null hypothesis is what p value tells us
+
+# cant say anything yet because didnt do actual testing
+
 # (c) Estimate the p-value using the figure and determine the conclusion of
 #     the hypothesis test.
+
+# big difference, small p-value
+
+# test distance between 2 groups
+# large difference, small p-value
+# but you dont know until you run test
+
+# Estimate based on figure: 
+# small difference; so large p-value
+
+# fail to reject null hypothesis; not enough evidence to say treatment has effect
 
 ####################################################################################
 # IST Exercise 9.2 
