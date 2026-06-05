@@ -143,15 +143,53 @@ ex2 <- read_csv("http://pluto.huji.ac.il/~msby/StatThink/Datasets/ex2.csv")
 
 # 1. Compute the proportion in the sample of those with a high level of blood
 #    pressure.
+summary(ex2)
+table(factor(ex2$group))
+
+# bad way ... "static"
+samp_high_bp_prop = 37/150
+print(high_bp_prop)
+
+# better way, now this is more "dynamic"
+mean(ex2$group == "HIGH")
+
 # 2. Compute the proportion in the population of those with a high level of
 #    blood pressure.
+summary(pop2)
+table(factor(pop2$group))
+
+mean(pop2$group == "HIGH")
+
 # 3. Simulate the sampling distribution of the sample proportion and compute
 #    its expectation.
+n <- 150 
+num_sim <- 10000 
+
+props_sim <- replicate(num_sim, mean(sample(pop2$group, size = n, replace = TRUE) == "HIGH")) 
+
+exp_prop <- mean(props_sim) 
+exp_prop 
+
 # 4. Compute the variance of the sample proportion.
+var(props_sim)
+
 # 5. It is proposed in Section 10.5 that the variance of the sample proportion
 #    is Var(P_hat) = p(1 - p)/n, where p is the probability of the event (having
 #    a high blood pressure in our case) and n is the sample size (n = 150 in our
 #    case). Examine this proposal in the current setting.
+p_true <- mean(pop2$group == "HIGH")
+p_true
+
+var_theo <- (p_true * (1 - p_true)) / n
+var_theo
+
+var_emp <- var(props_sim)
+var_emp
+
+var_diff <- abs(var_theo - var_emp)
+var_diff
+
+# theoretical and empirical are pretty close so the formula for var(p_hat) should be correct
 
 ####################################################################################
 # ISRS Exercise 2.2 - Heart transplants, Part II
