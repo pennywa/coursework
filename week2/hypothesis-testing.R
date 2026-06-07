@@ -321,6 +321,7 @@ treat_yawn_prop
 # small difference; so large p-value
 
 # fail to reject null hypothesis; not enough evidence to say treatment has effect
+# can't reject null hypothesis
 
 ####################################################################################
 # IST Exercise 9.2 
@@ -346,5 +347,40 @@ treat_yawn_prop
 #    measurements is Normal and there are 29 patients in the first group and 21
 #    in the second. Find the interval that contains 95% of the sampling
 #    distribution of the statistic.
+mu <- 3.5
+std1 <- 3
+std2 <- 1.5
+num_sim <- 10000 
+
+T_sim <- replicate(num_sim, {
+    sample1 <- rnorm(29, mean = mu, sd = std1)
+    sample2 <- rnorm(21, mean = mu, sd = std2)
+
+  x_bar_1 <- mean(sample1)
+  x_bar_2 <- mean(sample2)
+  s1_sq   <- var(sample1)
+  s2_sq   <- var(sample2)
+ (x_bar_1 - x_bar_2) / sqrt((s1_sq / 29) + (s2_sq / 21))
+})
+
+interval_95 <- quantile(T_sim, probs = c(0.025, 0.975))
+print(interval_95)
+
+# print(interval_95)
+#     2.5%     97.5% 
+# -2.007871  2.033796 
+
 # 2. Does the observed value of T (computed from the "magnets" data) fall
 #    inside or outside the interval computed in 1?
+x1_m <- mean(magnets$change[1:29])
+x1_v <- var(magnets$change[1:29])
+
+x2_m <- mean(magnets$change[30:50])
+x2_v <- var(magnets$change[30:50])
+
+T_observe <- (x1_m - x2_m) / sqrt((x1_v / 29) + (x2_v / 21))
+
+print(T_observe)
+# 5.985601
+
+# The observed T value falls outside the interval of [-2.007871, 2.033796]
