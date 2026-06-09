@@ -10,6 +10,14 @@ library(ISLR2)
 install.packages("boot")
 library(boot)
 ```
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+repo = "https://cran.r-project.org"
+install.packages("ISLR2", repos = repo)
+library(ISLR2)
+install.packages("boot", repos = repo)
+library(boot)
+```
 
 ## 5.3.1 The Validation Set Approach
 
