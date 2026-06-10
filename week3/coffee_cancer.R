@@ -17,6 +17,10 @@ You can use one of R's built-in power functions to calculate an answer.
 b) Comment on challenges you might face in running this experiment."
 
 # Ans a)
-
+power.prop.test(p1 = 0.40, p2 = 0.40001, sig.level = 0.10, power = 0.80, alternative = "one.sided") 
 
 # Ans b)
+# There might be a problem with the sample size and the global population that boils down to whether we have enough people or not.
+# How long is the study going to run for? Will participants drop out of the study simply because it's too long?
+# Other noise that people will be exposed to like environment factors, lifestyle changes other potential carcinogens like air polllution, smoking, etc.
+# How do we check that the people are sticking 100% (never drinking coffee group; what if one person cheats and takes 1 sip?)
