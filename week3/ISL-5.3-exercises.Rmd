@@ -177,5 +177,5 @@ We saw in Section 5.3.2 that the two numbers associated with delta are
 essentially the same when LOOCV is performed. When we instead perform
 k-fold CV, then the two numbers associated with delta differ slightly. The
 first is the standard k-fold CV estimate, as in (5.3). The second is a bias
-corrected version. On this data set, the two estimates are very similar to
-each other.
+corrected version. On this data set, the two estimates are very similar to 
+each other. 
