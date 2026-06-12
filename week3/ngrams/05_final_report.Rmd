@@ -206,7 +206,14 @@ Write up your answer to Part E here.
 For each year term, find the year where its proportion of mentions peaks (hits its highest value). Store this in an intermediate dataframe.
 
 ```{r compute-peaks}
+term_peaks <- year_proportions %>%
+  filter(term >= 1875 & term <= 1975) %>%
+  group_by(term) %>%
+    filter(proportion == max(proportion)) %>%
+  select(term, peak_year = year, peak_proportion = proportion) %>%
+  ungroup()
 
+head(term_peaks)
 ```
 
 ## Compute half-lifes
@@ -214,16 +221,32 @@ For each year term, find the year where its proportion of mentions peaks (hits i
 Now, for each year term, find the minimum number of years it takes for the proportion of mentions to decline from its peak value to half its peak value. Store this in an intermediate data frame.
 
 ```{r compute-half-lifes}
+term_half_lives <- year_proportions %>%
+  filter(term >= 1875 & term <= 1975) %>%
+  left_join(term_peaks, by = "term") %>%
+  filter(year >= peak_year) %>%
+  filter(proportion <= (peak_proportion / 2)) %>%
+  group_by(term) %>%
+  filter(year == min(year)) %>%
+  mutate(half_life = year - peak_year) %>%
+  select(term, peak_year, peak_proportion, half_life_year = year, half_life) %>%
+  ungroup()
 
+head(term_half_lives)
 ```
 
 ## Plot the inset of figure 3a
 
 Plot the half-life of each term over time from 1850 to 2012. Each point should represent one year term, and add a line to show the trend using `geom_smooth()`.
 
-
 ```{r plot-half-lifes}
-
+ggplot(term_half_lives, aes(x = term, y = half_life)) +
+  geom_point(alpha = 0.6, color = "black") +
+  geom_smooth(color = "purple", linewidth = 1) +
+  labs(
+    x = "Year",
+    y = "Half-life"
+  )
 ```
 
 ## Your written answer
@@ -233,6 +256,27 @@ Write up your answer to Part F here.
 # Part G
 
 > Were there any years that were outliers such as years that were forgotten particularly quickly or particularly slowly? Briefly speculate about possible reasons for that pattern and explain how you identified the outliers.
+
+```{r identify-outliers}
+#quickly forgotten
+shortest_half_lives <- term_half_lives %>%
+  arrange(half_life) %>%
+  head(3)
+
+print("Years with the shortest half-lives:")
+shortest_half_lives
+
+#remembered longest
+longest_half_lives <- term_half_lives %>%
+  arrange(desc(half_life)) %>%
+  head(3)
+
+  #arrange((half_life)) %>%
+  #tail(3)
+
+print("Years with the longest half-lives:")
+longest_half_lives
+```
 
 ## Your written answer
 
