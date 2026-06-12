@@ -52,13 +52,19 @@ Then edit the `03_download_totals.sh` file to down the `googlebooks-eng-all-tota
 Load in the `year_counts.tsv` and `total_counts.csv` files. Use the `here()` function around the filename to keep things portable.Give the columns of `year_counts.tsv` the names `term`, `year`, `volume`, and `book_count`. Give the columns of `total_counts.csv` the names `year`, `total_volume`, `page_count`, and `book_count`. Note that column order in these files may not match the examples in the documentation.
 
 ```{r load-counts}
- years <- read_tsv(here("week3", "ngrams", "year_counts.tsv"), col_names = c("term", "year", "volume", "book_count"))
- totals <- read_csv(here("week3", "ngrams", "total_counts.csv"), col_names = c("year", "total_volume", "page_count", "book_count"))
+ years <- read_tsv(here("week3", "ngrams", "year_counts.tsv"), 
+ col_names = c("term", "year", "volume", "book_count"))
+
+ totals <- read_csv(here("week3", "ngrams", "total_counts.csv"), 
+ col_names = c("year", "total_volume", "page_count", "book_count"))
 ```
 
 ## Your written answer
 
 Add a line below using Rmarkdown's inline syntax to print the total number of lines in each dataframe you've created.
+
+"The years dataframe has `r nrow(years)` rows  
+ The totals dataframe has `r nrow(totals)` rows."
 
 # Part B
 
@@ -69,8 +75,12 @@ Add a line below using Rmarkdown's inline syntax to print the total number of li
 Join the raw year term counts with the total counts and divide to get a proportion of mentions for each term normalized by the total counts for each year.
 
 ```{r join-years-and-totals}
+year_proportions <- years %>%
+  full_join(totals, by = "year") %>%
+  filter(!is.na(term)) %>% 
+  mutate(proportion = volume / total_volume)
 
-
+head(year_proportions)
 ```
 
 ## Plot the main figure 3a
@@ -78,12 +88,45 @@ Join the raw year term counts with the total counts and divide to get a proporti
 Plot the proportion of mentions for the terms "1883", "1910", and "1950" over time from 1850 to 2012, as in the main figure 3a of the original paper. Use the `percent` function from the `scales` package for a readable y axis. Each term should have a different color, it's nice if these match the original paper but not strictly necessary.
 
 ```{r plot-proportion-over-time}
+plot_data <- year_proportions %>%
+  filter(term %in% c(1883, 1910, 1950)) %>%
+  filter(year >= 1850 & year <= 2012)
 
+ggplot(plot_data, aes(x = year, y = proportion, color = as.factor(term))) +
+  geom_line(linewidth = 0.8) +
+  scale_y_continuous(labels = scales::percent) + 
+  scale_color_manual(values = c( 
+    "1883" = "blue", "1910" = "green", "1950" = "red" )) +
+  labs(
+    x = "Year",
+    y = "Frequency",
+    color = "Year"
+  ) 
 ```
 
 ## Your written answer
 
 Write up your answer to Part B here.
+
+The results here match with the plot presented in the paper in terms of behavior.
+There is little to no usage of the term before the year occurs,
+There's a spike in frequency of the term that specific year,
+Which is followed by a decay as seen in the downward curves for all 3 terms.
+
+I used full_join to combine the raw term frequencies, (years)
+with the baseline, (totals)
+year is the matching key
+
+full_join is like a union that retains rows from both datasets
+filtered by !is.na to keep the rows where the term col is not empty, so no na vals 
+mutate to create new proportion col divide the count the term appeared by valome of words printed in that specific year
+
+Used %in%, instead of having to chain together multiple "OR" (|) statements
+as.factor(term) becuase R treats it as continous numeric;
+This converts it to factor which is categorical so ggplot displays it as 3 distinct categories
+scale_color_manual to make it the exact colors as seen from the paper
+labels = scales::percent so it mult the decimals by 100 and adds %
+labs() replaces the col name as.factor(term) with human readable title "Year"
 
 # Part C
 
