@@ -207,6 +207,7 @@ For each year term, find the year where its proportion of mentions peaks (hits i
 
 ```{r compute-peaks}
 term_peaks <- year_proportions %>%
+  filter(year >= 1850 & year <= 2012) %>%
   filter(term >= 1875 & term <= 1975) %>%
   group_by(term) %>%
     filter(proportion == max(proportion)) %>%
