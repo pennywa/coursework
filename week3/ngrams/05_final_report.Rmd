@@ -154,7 +154,20 @@ and it looks more like upside down parabolas rather than jagged mountain ridges
 Plot the raw counts for the terms "1883", "1910", and "1950" over time from 1850 to 2012. Use the `comma` function from the `scales` package for a readable y axis. The colors for each term should match your last plot, and it's nice if these match the original paper but not strictly necessary.
 
 ```{r plot-raw-mentions-over-time}
+plot_raw_data <- year_proportions %>%
+  filter(term %in% c(1883, 1910, 1950)) %>%
+  filter(year >= 1850 & year <= 2012)
 
+ggplot(plot_data, aes(x = year, y = volume, color = as.factor(term))) +
+  geom_line(linewidth = 0.8) +
+  scale_y_continuous(labels = scales::comma) + 
+  scale_color_manual(values = c( 
+    "1883" = "blue", "1910" = "green", "1950" = "red" )) +
+  labs(
+    x = "Year",
+    y = "Raw Mention Count",
+    color = "Year"
+  ) 
 ```
 
 # Part E
@@ -168,7 +181,16 @@ As part of answering this question, make an additional plot.
 Plot the total counts for each year over time, from 1850 to 2012. Use the `comma` function from the `scales` package for a readable y axis. There should be only one line on this plot (not three).
 
 ```{r plot-totals}
+plot_totals_data <- totals %>%
+  filter(year >= 1850 & year <= 2012)
 
+ggplot(plot_totals_data, aes(x = year, y = total_volume)) +
+  geom_line(linewidth = 0.8, color = "purple") +
+  scale_y_continuous(labels = scales::comma) + 
+  labs(
+    x = "Year",
+    y = "Total Word Volume" # all books
+  )
 ```
 
 ## Your written answer
