@@ -139,7 +139,11 @@ Go to the ngram viewer, enter the terms "1883", "1910", and "1950" and take a sc
 ## Your written answer
 
 Add your screenshot for Part C below this line using the `![](figure_filename.png)` syntax and comment on similarities / differences.
+`![](ngrams_part_c.png)`
 
+Similar behavior flat at first, year hits  and there's a spike, then followed by decay.
+Differences is the ngram viewer is much smoother 
+and it looks more like upside down parabolas rather than jagged mountain ridges
 
 # Part D
 
