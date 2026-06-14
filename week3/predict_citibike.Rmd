@@ -13,7 +13,9 @@ library(modelr)
 ## Load data
 
 ```{r}
+trips_per_day <- read_tsv("trips_per_day.tsv")
 
+head(trips_per_day)
 ```
 
 ## Train/test split
@@ -22,7 +24,31 @@ Hold out 10% of the data as a final test set. Use the remaining 90% for
 training and validation.
 
 ```{r}
+set.seed(42) # 42 is the answer to the ultimate question of life
 
+# isolate 10% of test set
+total_days <- nrow(trips_per_day)
+frac_test <- 0.10
+num_test <- floor(total_days * frac_test)
+
+# randomly sample rows for the final test set 
+test_ndx <- sample(1:total_days, num_test, replace = FALSE)
+
+# used to fit the model
+# cutout the final test holdout; lock it in box until the end 
+trips_per_day_test <- trips_per_day[test_ndx, ]
+
+# used to evaluate the fit
+# remaining 90% becomes the "development" pool
+trips_dev_pool <- trips_per_day[-test_ndx, ]
+
+# sanity check: do the counts add up to total days? returns a bool
+nrow(trips_per_day_test)
+nrow(trips_dev_pool)
+nrow(trips_per_day_test) + nrow(trips_dev_pool) == total_days
+
+cat("Dev Pool, train & validate (90%):", nrow(trips_dev_pool), "days\n") 
+cat("Final Holdout Test Set (10%):", nrow(trips_per_day_test), "days\n") 
 ```
 
 ## Baseline model: temperature only
@@ -32,6 +58,10 @@ Start with the polynomial model from the complexity control notebook.
 ```{r}
 # TODO: fit a linear model using poly(tmin, degree) on training data
 # TODO: try different polynomial degrees and evaluate RMSE on validation data
+
+# "k-fold cross-validation if you'd like a more robust estimate"
+# letting k = 10 so trains/validates on 9 and tests on 1
+# is that too much? how do i even know ... 
 ```
 
 ## Feature engineering
