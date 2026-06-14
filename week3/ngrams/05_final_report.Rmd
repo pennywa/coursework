@@ -196,6 +196,9 @@ ggplot(plot_totals_data, aes(x = year, y = total_volume)) +
 ## Your written answer
 
 Write up your answer to Part E here.
+While it looks like the graphs are different, more noticeably with the year 1950 because in part b we see that the shape of 1950 is similar to 1883 and 1910, but in part d its decay behavior is less rapid.
+While there’s a difference, we do not have to re-evaluate the results because we have to remember the y axis are different; in part b we’re using proportions but in part d we’re using raw counts. 
+This teaches us that when comparing frequencies across eras of different scales, we must normalize our data and really pay attention to the scales or axis labels and what theyre telling us. 
 
 # Part F
 
@@ -253,6 +256,10 @@ ggplot(term_half_lives, aes(x = term, y = half_life)) +
 ## Your written answer
 
 Write up your answer to Part F here.
+No, version 2 of NGram data does not produce similar results to version 1 data.
+In version 1 data from the inset of figure 3a, there’s a curve but it goes downwards and the datapoints are mostly near or follow the curve.
+But with my graph (version 2) there is also a curve but the shape and direction of it is different, it’s more horizontal rather than going down. Also the data points are much more scattered and it doesn’t hug the line as nicely as version 1.
+I’m thinking it could be a difference in cleaning because my graph seems to have more noise or perhaps a difference in filtering. 
 
 # Part G
 
@@ -282,6 +289,45 @@ longest_half_lives
 ## Your written answer
 
 Write up your answer to Part G here. Include code that shows the years with the smallest and largest half-lifes.
+[1] "Years with the shortest half-lives:"
+> shortest_half_lives
+# A tibble: 3 × 5
+   term peak_year peak_proportion half_life_year half_life
+  <dbl>     <dbl>           <dbl>          <dbl>     <dbl>
+1  1878      1879       0.0000543           1883         4
+2  1877      1879       0.0000473           1883         4
+3  1942      1943       0.000167            1947         4
+
+
+[1] "Years with the longest half-lives:"
+> longest_half_lives
+# A tibble: 3 × 5
+   term peak_year peak_proportion half_life_year half_life
+  <dbl>     <dbl>           <dbl>          <dbl>     <dbl>
+1  1900      1905       0.0000585           1924        19
+2  1910      1911       0.0000794           1929        18
+3  1893      1894       0.0000470           1911        17
+
+These were my thoughts before looking at the outliers (to sanity check).
+Forgotten quickly: Years before the crisis
+
+Question: Is half life volatile?
+Example: Spike in one year -> drops the next year because of data noise? But it bounces back.
+
+Remembered longest:
+Years correlated with history
+WWI or Great War 
+WWII
+Great depression
+
+Historical anchors
+
+Now, seeing the outliers:
+The years with the shortest half lives 1877 and 1878 could be due to the end of the Reconstruction Era which was the period that followed the end of the American Civil War. 
+1942 was in the middle of WWII so as the saying goes, you tend to remember the beginning and end of things but the middle seems blurry.
+
+For the longest half lives, 1900 was a historical marker (the 20th century). Maybe even 1910 so 1900 and 1910 marks the start of a new era or the turn of the century.
+The panic of 1893 was the worst economic depression the US had up to that point, this served as a baseline until the Great Depression in 1929.
 
 # Makefile
 
