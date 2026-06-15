@@ -325,6 +325,36 @@ if (file.exists("final_bike_model.rds")) {
 
 ```{r}
 # TODO: load your saved model and predict on trips_test
+loaded_model <- readRDS("final_bike_model.rds")
+
 # TODO: compute RMSE on test set
+trips_test_creative <- trips_per_day_test %>%
+  mutate(date = ymd(date)) %>%
+  mutate(
+    temp_range = tmax - tmin,
+    day_of_week = wday(date, label = TRUE),
+    is_weekend = if_else(day_of_week %in% c("Sat", "Sun"), 1, 0),
+    month_of_year = month(date, label = TRUE),
+    is_raining = if_else(prcp > 0, 1, 0),
+    is_snowing = if_else(snow > 0, 1, 0),
+    has_snow_depth = if_else(snwd > 0, 1, 0),
+    is_holiday = if_else(date %in% holiday_dates, 1, 0)
+  )
+
+test_predictions <- predict(loaded_model, trips_test_creative)
+test_rmse <- sqrt(mean((test_predictions - trips_test_creative$num_trips)^2))
+
 # TODO: how do you think this model will perform on future data?
+
+# i have some regrets ...
+
+# All addons more powerful
+#But temp_envfrict is more stable
+
+#1 all_addons                        3963.           195.
+#2 addon_2_temp_envfrict             4708.           139.
+
+# I think this model will not perfom too well on future data; might be overfitting to validation data
+# need to think more about features that are likely to remain useful over time vs less reliable
+
 ```
