@@ -279,9 +279,33 @@ print(experiment_results)
 ## Final model
 
 Pick your best model and plot the results.
+Going with all_addons
+avg_validate RMSE of 3963
+standard_error of 195
+
+all_addons is the Combined Model (All Features)
+train final model on trips_dev_pool_creative
 
 ```{r}
+final_model <- lm(num_trips ~ poly(tmin, 4, raw = TRUE) * is_weekend +
+                              day_of_week + month_of_year +
+                              is_raining + is_snowing + has_snow_depth +
+                              is_holiday, 
+                  data = trips_dev_pool_creative)
+                  
+trips_dev_pool_plots <- 
+    add_predictions(trips_dev_pool_creative, final_model, var = "predicted_trips", type = NULL)
 
+ggplot(trips_dev_pool_plots, aes(x = predicted_trips, y = num_trips)) +
+  geom_point(alpha = 0.6, color = "purple") +
+  geom_abline(intercept = 0, slope = 1, color = "orange", linetype = "dashed", size = 1) +
+  theme_minimal() +
+  labs(
+    title = "Actual vs. Predicted Daily Trips",
+    subtitle = "Dashed orange line represents a perfect 1:1 prediction",
+    x = "Predicted Number of Trips",
+    y = "Actual Number of Trips"
+  )
 ```
 
 ## Save model
