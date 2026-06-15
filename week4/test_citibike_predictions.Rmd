@@ -44,7 +44,9 @@ tmin = TMIN * 0.10, ymd = DATE, prcp = PRCP, snow = SNOW, snwd = SNWD
 head(weather_2015)
 
 # join trips and weather data together
+# by ymd (easier to mutate dataset and make it the same col name)
 trips_and_weather <- inner_join(trips_per_day_2015, weather_2015, by = "ymd") %>% 
+    # no date col so just change to date = ymd
     mutate(date = ymd) %>%
     mutate(
         temp_range = tmax - tmin,
@@ -64,11 +66,14 @@ head(trips_and_weather)
 loaded_model <- readRDS("final_bike_model.rds")
 
 # TODO: compute RMSE on test set
+# change the file name to trips_and_weather
 test_predictions <- predict(loaded_model, trips_and_weather)
 test_rmse <- sqrt(mean((test_predictions - trips_and_weather$num_trips)^2))
-print(test_rmse)
-summary(final_model)$r.squared
+# print(test_rmse)
+# summary(loaded_model)$r.squared
+rmse(loaded_model, trips_and_weather)
+rsquare(loaded_model, trips_and_weather) # this one!
 ```
 
 # rmse:  8377.674
-# r.squared: 0.8809087
+# r.squared: 0.7102727
