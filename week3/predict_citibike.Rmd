@@ -357,4 +357,8 @@ rmse(loaded_model, trips_test_creative)
 
 # I think this model will not perfom too well on future data; might be overfitting to validation data
 # need to think more about features that are likely to remain useful over time vs less reliable
+
+# rmse(loaded_model, trips_test_creative)
+# 4290.819
+
 ```
