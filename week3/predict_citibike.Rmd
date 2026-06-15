@@ -1,6 +1,6 @@
 ---
 title: "Predicting Daily Citibike Trips"
-author: "Your Name"
+author: "Penny Wang"
 date: "`r Sys.Date()`"
 output: html_document
 ---
@@ -301,7 +301,7 @@ ggplot(trips_dev_pool_plots, aes(x = predicted_trips, y = num_trips)) +
   geom_abline(intercept = 0, slope = 1, color = "orange", linetype = "dashed", size = 1) +
   theme_minimal() +
   labs(
-    title = "Actual vs. Predicted Daily Trips",
+    title = "Actual vs. Ptest_citibike_predictions.Rmdtest_citibike_predictions.Rmdtest_citibike_predictions.Rmdredicted Daily Trips",
     subtitle = "Dashed orange line represents a perfect 1:1 prediction",
     x = "Predicted Number of Trips",
     y = "Actual Number of Trips"
@@ -356,5 +356,4 @@ test_rmse <- sqrt(mean((test_predictions - trips_test_creative$num_trips)^2))
 
 # I think this model will not perfom too well on future data; might be overfitting to validation data
 # need to think more about features that are likely to remain useful over time vs less reliable
-
 ```

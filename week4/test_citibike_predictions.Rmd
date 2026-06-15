@@ -1,0 +1,74 @@
+---
+title: "Predicting Daily Citibike Trips Model Testing on 2015 Data"
+author: "Penny Wang"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, message=FALSE}
+library(tidyverse)
+library(modelr)
+```
+
+## Load data
+
+```{r}
+trips_per_day_2015 <- read_tsv("trips_per_day_2015.tsv")
+weather_2015 <- read_csv("weather_2015.csv")
+
+final_bike_model <- readRDS("../week3/final_bike_model.rds")
+
+head(trips_per_day_2015)
+head(weather_2015)
+summary(final_bike_model)
+
+holiday_dates <- ymd(c(
+  "2014-01-01", # New Year's Day
+  "2014-01-20", # Martin Luther King Jr. Day
+  "2014-02-17", # Presidents' Day
+  "2014-05-26", # Memorial Day
+  "2014-07-04", # Independence Day
+  "2014-09-01", # Labor Day
+  "2014-10-13", # Columbus Day
+  "2014-11-11", # Veterans Day
+  "2014-11-27", # Thanksgiving
+  "2014-12-25"  # Christmas Day
+))
+
+# tmin are different scales; make them match
+# Multiply by 0.10 for 2015
+weather_2015 <- mutate(weather_2015, tmax = TMAX * 0.10, 
+tmin = TMIN * 0.10, ymd = DATE, prcp = PRCP, snow = SNOW, snwd = SNWD
+)
+
+head(weather_2015)
+
+# join trips and weather data together
+trips_and_weather <- inner_join(trips_per_day_2015, weather_2015, by = "ymd") %>% 
+    mutate(date = ymd) %>%
+    mutate(
+        temp_range = tmax - tmin,
+        day_of_week = wday(date, label = TRUE),
+        is_weekend = if_else(day_of_week %in% c("Sat", "Sun"), 1, 0),
+        month_of_year = month(date, label = TRUE),
+        is_raining = if_else(prcp > 0, 1, 0),
+        is_snowing = if_else(snow > 0, 1, 0),
+        has_snow_depth = if_else(snwd > 0, 1, 0),
+        is_holiday = if_else(date %in% holiday_dates, 1, 0)
+    )
+head(trips_and_weather)
+```
+
+```{r}
+# TODO: load your saved model and predict on trips_test
+loaded_model <- readRDS("final_bike_model.rds")
+
+# TODO: compute RMSE on test set
+test_predictions <- predict(loaded_model, trips_and_weather)
+test_rmse <- sqrt(mean((test_predictions - trips_and_weather$num_trips)^2))
+print(test_rmse)
+summary(final_model)$r.squared
+```
+
+# rmse:  8377.674
+# r.squared: 0.8809087
