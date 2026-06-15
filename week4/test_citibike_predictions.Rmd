@@ -77,3 +77,17 @@ rsquare(loaded_model, trips_and_weather) # this one!
 
 # rmse:  8377.674
 # r.squared: 0.7102727
+
+```{r}
+trips_dev_pool_plots <- 
+    add_predictions(trips_and_weather, final_model)
+
+ggplot(trips_dev_pool_plots, aes(x = ymd, y = num_trips)) +
+  geom_point(alpha = 0.6, color = "purple") +
+  geom_line(aes(x=ymd,y=pred)) +
+  theme_minimal() +
+  labs(
+    x = "ymd",
+    y = "pred"
+  )
+```
