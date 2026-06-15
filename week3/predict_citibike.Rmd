@@ -311,7 +311,12 @@ ggplot(trips_dev_pool_plots, aes(x = predicted_trips, y = num_trips)) +
 ## Save model
 
 ```{r}
+saveRDS(final_model, "final_bike_model.rds")
 
+# sanity check
+if (file.exists("final_bike_model.rds")) {
+  cat("Success: 'final_bike_model.rds' has been safely saved to your working directory!\n")
+}
 ```
 
 ## Test set evaluation
