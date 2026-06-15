@@ -112,7 +112,7 @@ ggplot(plot_data, aes(x=K, y=avg_validate_err)) +
                       ymax=avg_validate_err + se_validate_err,
                       color=avg_validate_err == min(avg_validate_err))) +
   geom_line(color = "red") +
-  scale_x_continuous(breaks=1:10) +
+  scale_x_continuous(breaks=1:8) +
   theme(legend.position="none") +
   xlab('Polynomial Degree') +
   ylab('RMSE on validation data')
@@ -131,6 +131,108 @@ Remember: only use information available *before* the day in question.
 
 ```{r}
 
+# i just created a new file called US_holidays.csv and copy and pasted
+# first row added col names; date, holiday
+
+# Update: I can't get it to work so I'm explicitly adding federal holidays 
+holiday_dates <- ymd(c(
+  "2014-01-01", # New Year's Day
+  "2014-01-20", # Martin Luther King Jr. Day
+  "2014-02-17", # Presidents' Day
+  "2014-05-26", # Memorial Day
+  "2014-07-04", # Independence Day
+  "2014-09-01", # Labor Day
+  "2014-10-13", # Columbus Day
+  "2014-11-11", # Veterans Day
+  "2014-11-27", # Thanksgiving
+  "2014-12-25"  # Christmas Day
+))
+# I put 10 holidays but this output
+# A tibble: 2 × 2
+# is_holiday     n
+#      <dbl> <int>
+#1          0   321
+#2          1     8
+# why is it only catching 8 ??
+
+trips_dev_pool_creative <- trips_dev_pool %>%
+  arrange(date) %>%
+  mutate(date = ymd(date)) %>% # convert to date
+  
+  # Temperature Metrics
+  mutate(
+    temp_range = tmax - tmin
+  ) %>%
+
+  # Add-on 1: Time & Commute
+  mutate(
+    day_of_week = wday(date, label = TRUE),
+    is_weekend = if_else(day_of_week %in% c("Sat", "Sun"), 1, 0),
+    month_of_year = month(date, label = TRUE)
+  ) %>%
+
+  # Add-on 2: Environmental Friction
+  mutate(
+    is_raining = if_else(prcp > 0, 1, 0),
+    is_snowing = if_else(snow > 0, 1, 0),
+    has_snow_depth = if_else(snwd > 0, 1, 0)
+  ) %>%
+  
+  # Add-on 3: Holiday Effects
+  mutate(
+    is_holiday = if_else(date %in% holiday_dates, 1, 0)
+  )
+
+# Check whats up
+trips_dev_pool_creative %>% count(is_holiday)
+glimpse(trips_dev_pool_creative)
+```
+
+```{r}
+set.seed(42)
+num_folds <- 10
+
+# Scramble dataset and assign folds
+trips_dev_pool_folds <- trips_dev_pool_creative %>%
+    slice_sample(prop = 1) %>%
+    mutate(fold = (row_number() %% num_folds) + 1)
+
+# init vectors
+err_baseline <- c()
+err_time <- c()
+err_env_friction <- c()
+err_holiday <- c()
+err_all_features <- c()
+
+# Run 10-fold
+for (f in 1:num_folds) {
+    # Separate into training and validation folds
+    train <- filter(trips_dev_pool_folds, fold != f)
+    validate <- filter(trips_dev_pool_folds, fold == f)
+
+    # Experiment 0: Baseline (Temp Only)
+    m_baseline <- lm(num_trips ~ poly(tmin, 4, raw = TRUE), data = train)
+    err_baseline[f] <- sqrt(mean((predict(m_baseline, validate) - validate$num_trips)^2))
+
+    # Experiment 1: Temp + Time (Commute Patterns)
+    m_time <- lm(num_trips ~ poly(tmin, 4, raw = TRUE) * is_weekend + day_of_week + month_of_year, data = train)
+    err_time[f] <- sqrt(mean((predict(m_time, validate) - validate$num_trips)^2))
+ 
+    # Experiment 2: Temperature + Environmental Friction
+    m_env_friction <- lm(num_trips ~ poly(tmin, 4, raw = TRUE) + is_raining + is_snowing + has_snow_depth, data = train)
+    err_env_friction[f] <- sqrt(mean((predict(m_env_friction, validate) - validate$num_trips)^2))
+ 
+    # Experiment 3: Temperature + Holiday Effects
+    m_holiday <- lm(num_trips ~ poly(tmin, 4, raw = TRUE) + is_holiday, data = train)
+    err_holiday[f] <- sqrt(mean((predict(m_holiday, validate) - validate$num_trips)^2))
+ 
+    # Experiment 4: Combined Model (All Features)
+    m_all_features <- lm(num_trips ~ poly(tmin, 4, raw = TRUE) * is_weekend +
+                                    day_of_week + month_of_year +
+                                    is_raining + is_snowing + has_snow_depth +
+                                    is_holiday, data = train)
+    err_all_features[f] = sqrt(mean((predict(m_all_features, validate) - validate$num_trips)^2))
+}
 ```
 
 ## Model comparison
@@ -138,7 +240,40 @@ Remember: only use information available *before* the day in question.
 Try different models and compare their validation performance.
 
 ```{r}
+experiment_results <- tibble(
+  experiment = c(
+    "baseline_temp_only", 
+    "addon_1_temp_time", 
+    "addon_2_temp_envfrict", 
+    "addon_3_temp_holidays", 
+    "all_addons"
+  ),
+  avg_validate_RMSE = c(
+    mean(err_baseline), 
+    mean(err_time), 
+    mean(err_env_friction), 
+    mean(err_holiday), 
+    mean(err_all_features)
+  ),
+  standard_error = c(
+    sd(err_baseline) / sqrt(num_folds), 
+    sd(err_time) / sqrt(num_folds), 
+    sd(err_env_friction) / sqrt(num_folds), 
+    sd(err_holiday) / sqrt(num_folds), 
+    sd(err_all_features) / sqrt(num_folds)
+  )
+)
 
+# arrange by lowest error aka best performance
+experiment_results <- experiment_results %>% 
+  arrange(avg_validate_RMSE)
+
+# view final comparison table
+print(experiment_results)
+
+# concerns: will this overfit on unseen data?
+# environmental friction is the most stable add on; lowest standard error
+# all add ons combined is the most "powerful"; lowest avg RMSE
 ```
 
 ## Final model
