@@ -344,6 +344,7 @@ trips_test_creative <- trips_per_day_test %>%
 test_predictions <- predict(loaded_model, trips_test_creative)
 test_rmse <- sqrt(mean((test_predictions - trips_test_creative$num_trips)^2))
 
+rmse(loaded_model, trips_test_creative)
 # TODO: how do you think this model will perform on future data?
 
 # i have some regrets ...
